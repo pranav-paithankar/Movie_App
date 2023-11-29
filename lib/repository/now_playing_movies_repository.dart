@@ -5,11 +5,12 @@ import '../res/app_url.dart';
 
 class NowPlayingMoviesRepository {
   BaseApiServices _apiServices = NetworkApiService();
+  // ignore: prefer_typing_uninitialized_variables
+  var url;
 
-  Future<NowPlayingMovies> fetchNowPlayingApi() async {
+  Future<NowPlayingMovies> fetchNowPlayingApi(url) async {
     try {
-      dynamic response =
-          await _apiServices.getGetApiResponse(AppUrl.nowPlayingMovies);
+      dynamic response = await _apiServices.getGetApiResponse(url);
 
       return response = NowPlayingMovies.fromJson(response);
     } catch (e) {

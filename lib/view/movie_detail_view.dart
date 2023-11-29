@@ -1,160 +1,163 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/model/now_playing_movies_model.dart';
 import 'package:movie_app/res/color.dart';
+import 'package:movie_app/utils/routes/routes_name.dart';
+import 'package:provider/provider.dart';
 
-class MovieDetails extends StatelessWidget {
+import '../view_model/BottomNavBarProvider.dart';
+
+class MovieDetails extends StatefulWidget {
   MovieDetails({Key? key, required this.movie}) : super(key: key);
   final Results movie;
+
+  @override
+  State<MovieDetails> createState() => _MovieDetailsState();
+}
+
+class _MovieDetailsState extends State<MovieDetails> {
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff4f4f4),
-      appBar: AppBar(
-        backgroundColor: Color(0xfff4f4f4),
-        elevation: 0,
-        iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Hero(
-              tag: movie.id!,
-              child: Card(
-                elevation: 5,
-                child: Container(
-                  height: 450,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                        "https://image.tmdb.org/t/p/original${movie.backdropPath!}",
-                      ),
-                    ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: AppColors.bgLightColor,
+          leadingWidth: 120,
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: const Row(
+                children: [
+                  Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.grey,
                   ),
-                ),
+                  Text('Back',
+                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                ],
               ),
             ),
-            SizedBox(height: 20),
-            Text(
-              movie.title!,
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                buildInfoCard(
-                    Icons.timer_outlined, movie.voteCount!.toString()),
-                buildInfoCard(Icons.calendar_today, movie.releaseDate!),
-                buildInfoCard(Icons.star_border, movie.popularity!.toString()),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                movie.overview!,
-                style: TextStyle(
-                  fontSize: 18,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Row(
-        children: [
-          buildButton(
-            Icons.play_circle_outline,
-            'Watch Trailer',
-            AppColors.greyColor,
           ),
-          buildButton(
-            Icons.check_circle_outline,
-            'Buy Now',
-            AppColors.greyColor,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildInfoCard(IconData icon, String text) {
-    return Card(
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 10,
-          horizontal: 20,
         ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              size: 45,
-              //color: Theme.of(context).primaryColor,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildButton(IconData icon, String label, Color color) {
-    return Expanded(
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(color),
-        ),
-        onPressed: () {
-          // Implement button functionality here
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 20,
-            bottom: 20,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        body: SafeArea(
+          child: Stack(
             children: [
-              Icon(
-                icon,
-                color: Colors.white,
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Image.network(
+                  "https://image.tmdb.org/t/p/original${widget.movie.backdropPath!}",
+                  fit: BoxFit.fill,
+                ),
               ),
-              Text(
-                label,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.grey.withOpacity(0.4),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  color: Colors.black.withOpacity(0.8),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 40),
+                      Text(
+                        widget.movie.title.toString(),
+                        maxLines: 1,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        widget.movie.releaseDate,
+                        maxLines: 1,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.star, color: Colors.white, size: 15),
+                          const SizedBox(width: 10),
+                          Text(
+                            widget.movie.voteAverage.toString(),
+                            maxLines: 1,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        widget.movie.overview.toString(),
+                        maxLines: 4,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
+        bottomNavigationBar:
+            Consumer<BottomNavBarProvider>(builder: (context, provider, _) {
+          return BottomNavigationBar(
+            elevation: 1.0,
+            selectedItemColor: Colors.black,
+            selectedLabelStyle: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+            unselectedItemColor: Colors.grey,
+            backgroundColor: AppColors.bgLightColor,
+            currentIndex: provider.currentIndex,
+            onTap: (index) {
+              provider.updateIndex(index);
+
+              switch (index) {
+                case 0:
+                  Navigator.of(context)
+                      .pushNamed(RoutesName.now_playing_movies);
+                  break;
+                case 1:
+                  Navigator.of(context).pushNamed(RoutesName.top_rated_movies);
+                  break;
+              }
+            },
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.movie_creation_outlined),
+                label: 'Now playing',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.star_border),
+                label: 'Top rated',
+              ),
+            ],
+          );
+        }));
   }
 }

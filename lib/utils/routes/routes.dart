@@ -8,8 +8,22 @@ class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RoutesName.now_playing_movies:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => NowPlayingMovies());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              NowPlayingMovies(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        );
 
       case RoutesName.top_rated_movies:
         return MaterialPageRoute(
@@ -18,10 +32,23 @@ class Routes {
       case RoutesName.movie_details:
         final args = settings.arguments as Map<String, dynamic>;
 
-        return MaterialPageRoute(
-            builder: (BuildContext context) => MovieDetails(
-                  movie: args["movie"],
-                ));
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => MovieDetails(
+            movie: args["movie"],
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        );
 
       default:
         return MaterialPageRoute(builder: (_) {
