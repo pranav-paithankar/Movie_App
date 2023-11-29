@@ -1,7 +1,7 @@
 import '../data/network/BaseApiServices.dart';
 import '../data/network/NetworkApiService.dart';
+import '../model/now_playing_movies_model.dart';
 import '../res/app_url.dart';
-import '../view/now_playing_movies_view.dart';
 
 class NowPlayingMoviesRepository {
   BaseApiServices _apiServices = NetworkApiService();
@@ -10,7 +10,7 @@ class NowPlayingMoviesRepository {
     try {
       dynamic response =
           await _apiServices.getGetApiResponse(AppUrl.nowPlayingMovies);
-      print("response $response");
+
       return response = NowPlayingMovies.fromJson(response);
     } catch (e) {
       throw e;

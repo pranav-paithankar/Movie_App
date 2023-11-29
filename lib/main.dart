@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movie_app/res/color.dart';
 import 'package:movie_app/view_model/Serach_Bar_Provider.dart';
+import 'package:movie_app/view_model/now_playing_movies_view_model.dart';
 import 'package:provider/provider.dart';
 
 import 'utils/routes/routes.dart';
@@ -20,6 +21,7 @@ void main() {
   );
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => SearchBarProvider()),
+    ChangeNotifierProvider(create: (context) => NowPlayinMoviesViewModel()),
   ], child: MyApp()));
 }
 

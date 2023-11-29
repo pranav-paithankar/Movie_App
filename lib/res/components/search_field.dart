@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/res/color.dart';
 import 'package:provider/provider.dart';
-
 import '../../utils/size_config.dart';
 import '../../view_model/Serach_Bar_Provider.dart';
 
 class SearchField extends StatefulWidget {
-  const SearchField({super.key});
+  const SearchField({Key? key}) : super(key: key);
 
   @override
   State<SearchField> createState() => _SearchFieldState();
@@ -52,7 +51,8 @@ class _SearchFieldState extends State<SearchField> {
                                   ),
                                   iconSize: 9,
                                   onPressed: () {
-                                    _isSearch.Searching();
+                                    _isSearch.stopSearching();
+                                    _searchController.clear();
                                   },
                                 ),
                               ),
@@ -70,21 +70,25 @@ class _SearchFieldState extends State<SearchField> {
                       ),
                     ),
                     onChanged: (value) {
-                      _isSearch.Searching();
+                      _isSearch.setSearchQuery(value);
                     },
                   ),
                 ),
                 SizedBox(
                   child: TextButton(
-                      onPressed: () {
-                        _isSearch.Searching();
-                      },
-                      child: Text("Cancel",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.greyColor,
-                            fontSize: 18,
-                          ))),
+                    onPressed: () {
+                      _isSearch.stopSearching();
+                      _searchController.clear();
+                    },
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.greyColor,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
                 )
               ]),
             )
@@ -92,7 +96,7 @@ class _SearchFieldState extends State<SearchField> {
               padding: const EdgeInsets.only(top: 10),
               child: InkWell(
                 onTap: () {
-                  _isSearch.Searching();
+                  _isSearch.startSearching();
                 },
                 child: Container(
                   height: 40,
@@ -112,12 +116,14 @@ class _SearchFieldState extends State<SearchField> {
                           Icons.search_sharp,
                           color: AppColors.greyColor,
                         ),
-                        Text("Search",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.greyColor,
-                              fontSize: 16,
-                            ))
+                        Text(
+                          "Search",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.greyColor,
+                            fontSize: 16,
+                          ),
+                        )
                       ],
                     ),
                   ),

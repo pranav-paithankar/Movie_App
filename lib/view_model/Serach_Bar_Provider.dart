@@ -2,11 +2,24 @@ import 'package:flutter/material.dart';
 
 class SearchBarProvider with ChangeNotifier {
   bool _isSearching = false;
+  String _searchQuery = '';
 
   bool get isSearching => _isSearching;
+  String get searchQuery => _searchQuery;
 
-  void Searching() {
-    _isSearching = !_isSearching;
+  void startSearching() {
+    _isSearching = true;
+    notifyListeners();
+  }
+
+  void stopSearching() {
+    _isSearching = false;
+    _searchQuery = '';
+    notifyListeners();
+  }
+
+  void setSearchQuery(String query) {
+    _searchQuery = query;
     notifyListeners();
   }
 }
