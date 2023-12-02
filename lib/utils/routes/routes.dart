@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/view/movie_detail_view.dart';
-import 'package:movie_app/view/top_rated_movies_view.dart';
-import '../../view/now_playing_movies_view.dart';
+import 'package:movie_app/view/landing_view.dart';
+import 'package:movie_app/view/movie_details_view.dart';
+import '../../view/movies_list_view.dart';
+import '../../view/splash_view.dart';
 import 'routes_name.dart';
 
 class Routes {
@@ -10,7 +11,7 @@ class Routes {
       case RoutesName.now_playing_movies:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              NowPlayingMovies(),
+              const MoviesListView(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
@@ -25,15 +26,12 @@ class Routes {
           },
         );
 
-      case RoutesName.top_rated_movies:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => TopRatedMovies());
-
       case RoutesName.movie_details:
         final args = settings.arguments as Map<String, dynamic>;
 
         return PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => MovieDetails(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              MovieDetailsView(
             movie: args["movie"],
           ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -49,7 +47,13 @@ class Routes {
             );
           },
         );
+      case RoutesName.landing_screen:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const LandingView());
 
+      case RoutesName.splash_view:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const SplashView());
       default:
         return MaterialPageRoute(builder: (_) {
           return const Scaffold(

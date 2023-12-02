@@ -1,44 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/res/app_url.dart';
 import 'package:movie_app/res/color.dart';
 import 'package:movie_app/res/components/common_listview.dart';
 import 'package:movie_app/res/components/search_field.dart';
-import 'package:movie_app/utils/routes/routes_name.dart';
-import 'package:movie_app/view_model/now_playing_movies_view_model.dart';
+import 'package:movie_app/view_model/movies_list_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../data/response/status.dart';
-import '../view_model/BottomNavBarProvider.dart';
-import '../view_model/Serach_Bar_Provider.dart';
 
-class TopRatedMovies extends StatefulWidget {
-  const TopRatedMovies({super.key});
-
+class MoviesListView extends StatefulWidget {
+  const MoviesListView({Key? key, this.url}) : super(key: key);
+  final String? url;
   @override
-  State<TopRatedMovies> createState() => _TopRatedMoviesState();
+  State<MoviesListView> createState() => _MoviesListViewState();
 }
 
-class _TopRatedMoviesState extends State<TopRatedMovies> {
-  NowPlayinMoviesViewModel nowPlayingMoviesViewModel =
-      NowPlayinMoviesViewModel();
-
-  var url = AppUrl.topRatedMovies;
+class _MoviesListViewState extends State<MoviesListView> {
+  MoviesListViewModel nowPlayingMoviesViewModel = MoviesListViewModel();
 
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   @override
   void initState() {
-    nowPlayingMoviesViewModel.fetchNowPlayingMoviesApi(url);
+    nowPlayingMoviesViewModel.fetchNowPlayingMoviesApi(widget.url!);
     super.initState();
   }
 
   void _onRefresh() async {
-    // monitor network fetch
     await nowPlayingMoviesViewModel
-        .fetchNowPlayingMoviesApi(url)
+        .fetchNowPlayingMoviesApi(widget.url!)
         .then((value) => _refreshController.refreshCompleted());
-    // if failed,use refreshFailed()
   }
 
   @override
@@ -48,12 +39,12 @@ class _TopRatedMoviesState extends State<TopRatedMovies> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.bgLightColor,
-        title: SearchField(),
+        title: const SearchField(),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(2.0),
+          preferredSize: const Size.fromHeight(2.0),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Container(
@@ -68,24 +59,22 @@ class _TopRatedMoviesState extends State<TopRatedMovies> {
         enablePullDown: true,
         onRefresh: _onRefresh,
         controller: _refreshController,
-        child: ChangeNotifierProvider<NowPlayinMoviesViewModel>(
+        child: ChangeNotifierProvider<MoviesListViewModel>(
           create: (BuildContext context) => nowPlayingMoviesViewModel,
-          child: Consumer<NowPlayinMoviesViewModel>(
+          child: Consumer<MoviesListViewModel>(
             builder: (context, value, _) {
-              switch (value.nowPlayingMoviesList.status) {
+              switch (value.moviesList.status) {
                 case Status.LOADING:
                   return const Center(child: CircularProgressIndicator());
                 case Status.ERROR:
                   return Center(
-                      child:
-                          Text(value.nowPlayingMoviesList.message.toString()));
+                      child: Text(value.moviesList.message.toString()));
                 case Status.COMPLETED:
                   return CommonListView(
-                      nowPlayingMovies: value.nowPlayingMoviesList.data!,
+                      nowPlayingMovies: value.moviesList.data!,
                       onDissmiss: (index) {
                         setState(() {
-                          value.nowPlayingMoviesList.data!.results!
-                              .removeAt(index);
+                          value.moviesList.data!.results!.removeAt(index);
                         });
                       });
 

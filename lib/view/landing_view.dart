@@ -1,25 +1,25 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/res/color.dart';
-import 'package:movie_app/view/now_playing_movies_view.dart';
-import 'package:movie_app/view/top_rated_movies_view.dart';
+import 'package:movie_app/view/movies_list_view.dart';
 
-class LandingScreen extends StatefulWidget {
-  const LandingScreen({super.key});
+import '../res/app_url.dart';
+
+class LandingView extends StatefulWidget {
+  const LandingView({super.key});
 
   @override
-  State<LandingScreen> createState() => _LandingScreenState();
+  State<LandingView> createState() => _LandingViewState();
 }
 
-class _LandingScreenState extends State<LandingScreen> {
+class _LandingViewState extends State<LandingView> {
   int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: currentPageIndex, children: const [
-        NowPlayingMovies(),
-        TopRatedMovies(),
+      body: IndexedStack(index: currentPageIndex, children: [
+        MoviesListView(url: AppUrl.nowPlayingMovies),
+        MoviesListView(url: AppUrl.topRatedMovies),
       ]),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 1.0,

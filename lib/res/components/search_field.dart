@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/res/color.dart';
 import 'package:provider/provider.dart';
-import '../../utils/size_config.dart';
 import '../../view_model/Serach_Bar_Provider.dart';
+import '../size_config.dart';
 
 class SearchField extends StatefulWidget {
   const SearchField({Key? key}) : super(key: key);
@@ -12,13 +12,13 @@ class SearchField extends StatefulWidget {
 }
 
 class _SearchFieldState extends State<SearchField> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Consumer<SearchBarProvider>(builder: (context, _isSearch, _) {
-      return _isSearch.isSearching
+    return Consumer<SearchBarProvider>(builder: (context, isSearch, _) {
+      return isSearch.isSearching
           ? Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Row(children: [
@@ -31,27 +31,27 @@ class _SearchFieldState extends State<SearchField> {
                     autofocus: true,
                     decoration: InputDecoration(
                       contentPadding:
-                          EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      prefixIcon: Icon(
+                          const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      prefixIcon: const Icon(
                         Icons.search_sharp,
                         color: AppColors.greyColor,
                       ),
                       fillColor: Colors.white,
                       filled: true,
                       hintText: 'Search',
-                      suffixIcon: _isSearch.isSearching
+                      suffixIcon: isSearch.isSearching
                           ? Padding(
                               padding: const EdgeInsets.all(8),
                               child: CircleAvatar(
                                 backgroundColor: AppColors.greyColor,
                                 child: IconButton(
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.clear,
                                     color: AppColors.whiteColor,
                                   ),
                                   iconSize: 9,
                                   onPressed: () {
-                                    _isSearch.stopSearching();
+                                    isSearch.stopSearching();
                                     _searchController.clear();
                                   },
                                 ),
@@ -70,17 +70,17 @@ class _SearchFieldState extends State<SearchField> {
                       ),
                     ),
                     onChanged: (value) {
-                      _isSearch.setSearchQuery(value);
+                      isSearch.setSearchQuery(value);
                     },
                   ),
                 ),
                 SizedBox(
                   child: TextButton(
                     onPressed: () {
-                      _isSearch.stopSearching();
+                      isSearch.stopSearching();
                       _searchController.clear();
                     },
-                    child: Text(
+                    child: const Text(
                       "Cancel",
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
@@ -96,7 +96,7 @@ class _SearchFieldState extends State<SearchField> {
               padding: const EdgeInsets.only(top: 10),
               child: InkWell(
                 onTap: () {
-                  _isSearch.startSearching();
+                  isSearch.startSearching();
                 },
                 child: Container(
                   height: 40,
@@ -108,7 +108,7 @@ class _SearchFieldState extends State<SearchField> {
                   child: SizedBox(
                     width: SizeConfig.screenWidth * 0.9,
                     height: SizeConfig.screenHeight * 0.1,
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
